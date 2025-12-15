@@ -1,0 +1,11 @@
+.streamlit/
+
+
+# Virtual environments
+benchmarking_llm/
+venv/
+.env/
+
+# Python cache
+__pycache__/
+*.pyc
