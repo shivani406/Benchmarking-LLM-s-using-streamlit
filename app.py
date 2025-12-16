@@ -1,5 +1,5 @@
 import streamlit as st
-from google import genai
+import google.generativeai as genai 
 import time
 import pandas as pd
 import plotly.express as px
@@ -11,20 +11,22 @@ st.title("LLM Benchmarking Dashboard")
 st.subheader("Evaluate and Compare Large Language Models")
 st.divider()
 
-client = genai.Client(api_key = st.secrets["GEMINI_API_KEY"])
+client = genai.configure(api_key = st.secrets["GEMINI_API_KEY"])
 client_groq = Groq(api_key = st.secrets["GROQ_API_KEY"])
 
 
 def call_gemini(prompt):
     start = time.time()
-    response = client.models.generate_content(model = "gemini-2.5-flash" , contents = prompt)
+
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(prompt)
+
     end = time.time()
-    if response.usage_metadata:
-        token_count  = response.usage_metadata.total_token_count
-    else:
-        token_count = len(response.text)//4
+
+    token_count = len(response.text) // 4  # if the average token length is 4 characters
 
     return response.text, end - start, token_count
+
 
 def call_llama(prompt):
     start = time.time()
