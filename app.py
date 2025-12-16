@@ -18,7 +18,7 @@ client_groq = Groq(api_key = st.secrets["GROQ_API_KEY"])
 def call_gemini(prompt):
     start = time.time()
 
-    model = genai.GenerativeModel("gemini-1.0-pro")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(prompt)
 
     end = time.time()
