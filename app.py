@@ -18,14 +18,18 @@ client_groq = Groq(api_key = st.secrets["GROQ_API_KEY"])
 def call_gemini(prompt):
     start = time.time()
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-1.5-pro-latest")
     response = model.generate_content(prompt)
 
     end = time.time()
 
-    token_count = len(response.text) // 4  # if the average token length is 4 characters
+    if hasattr(response, "usage_metadata") and response.usage_metadata:
+        tokens = response.usage_metadata.total_token_count
+    else:
+        tokens = len(prompt + response.text) // 4  # rough estimate 
 
-    return response.text, end - start, token_count
+    return response.text, end - start, tokens
+
 
 
 def call_llama(prompt):
